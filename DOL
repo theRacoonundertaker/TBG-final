@@ -1,0 +1,640 @@
+#include<Windows.h>
+#include<iostream>
+#include<string>
+#pragma comment(lib, "winmm.lib")
+using namespace std;
+//global variables
+//1) declare an empty inventory with a string array
+string inventory[10];
+int dubloons = 100;
+
+//function delcarations
+void MonsterGen();
+void BattleSystem();
+void Shop();
+void PetGen();
+int PlayerHealth = 10000;
+
+void itemDropper();
+
+int main() {
+  //initialize it with all empty spaces
+  for (int i = 0; i < 10; i++)
+    inventory[i] = " ";
+
+  inventory[0] = "wooden sword";
+
+  cout << "Welcome to the Dungeon!" << endl;
+
+  //local variables
+  string direction = "a";
+  int room = 1;
+  int affinity = 0;
+  bool hasWon = false;
+
+  while (direction != "q" && PlayerHealth > 0 && hasWon == false) { //game loop!!!------------------}
+    //3) print out the inventory
+    cout << "your inventory:" << endl;
+    for (int i = 0; i < 10; i++)
+      cout << inventory[i] << " ";
+    cout << endl;
+
+    string direction;
+
+    switch (room) {//switch holds the different rooms
+    case 1:
+      system("color 1B");
+      cout << "you're in room 1, You wake up in blank room with a IV bag and a plain bed. You can go (e)ast. you see a shiny (k)ey on the ground." << endl;
+      cout << "press d to pet the dog" << endl;
+      if (inventory[0] != "key")
+        cout << "you see a shiny key on the ground." << endl;
+      cout << "there's a sho(p) in the corner." << endl;
+      getline(cin, direction); //use this get strings with spaces
+      if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+        if (direction == "e")
+          room = 2;
+      //if they press d, add 10 to affinity
+      if (direction == "d")
+        affinity += 10;
+      PetGen();
+      if (direction == "k")
+        cout << "you got a shiny key" << endl;
+      inventory[0] = "key";
+
+      if (direction == "p")
+        Shop();//call the function
+      break;
+    case 2:
+      //MonsterGen();
+      system("color 2F");
+      cout << "you're in room 2 which is the main room/living room, that has a bunch of a paintings with classical musicians." << endl;
+      cout << "You can go(s)outh or (w)est." << endl;
+      getline(cin, direction);
+      if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+        if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+          if (direction == "d") {
+            affinity += 10;
+            PetGen();
+            cout << "the dogs affinity for you grows by 10" << endl;
+          }
+      if (direction == "s")
+        room = 3;
+      if (direction == "w")
+        room = 1;
+      break;
+    case 3:
+      system("color 47");
+      cout << "you're in room 3 which is the kitchen where you can grab some food and drinks." << endl;
+      cout << "You can go (n)orth or (s)outh." << endl;
+      cout << "there's a (t)reasure box in the corner!" << endl;
+      getline(cin, direction);
+      if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+          if (direction == "d")
+            affinity += 10;
+      PetGen();
+      if (direction == "n")
+        room = 2;
+      if (direction == "s")
+        room = 4;
+      if (direction == "t") //the player types "t" for this to run
+        itemDropper();
+      break;
+    case 4:
+      system("color 3F");
+      cout << "you're in room 4 which is the bathroom 1 with a fancy japanese toilet and a sink." << endl;
+      cout << "You can go (n)orth or (e)ast." << endl;
+      getline(cin, direction);
+      if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+          if (direction == "d")
+            affinity += 10;
+      PetGen();
+      if (direction == "n")
+        room = 3;
+      if (direction == "e")
+        room = 5;
+      break;
+    case 5:
+      system("color 5F");
+      cout << "you're in room 5 which is the music studio, where you can be next soundcloud rapper wanna be." << endl;
+      cout << "You can go (w)est or (s)outh." << endl;
+      getline(cin, direction);
+      if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+          if (direction == "d")
+            affinity += 10;
+      PetGen();
+      if (direction == "w")
+        room = 4;
+      if (direction == "s")
+        room = 6;
+      break;
+
+    case 6:
+      system("color 4F");
+      cout << "you're in room 6 which is the master room, with a personal bathroom/shower and a bed big enough for a village." << endl;
+      cout << "You can go (n)orth or (e)ast" << endl;
+      getline(cin, direction);
+      if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+          if (direction == "d")
+            affinity += 10;
+      PetGen();
+
+      room = 5;
+
+      room = 7;
+      break;
+
+    case 7:
+      system("color 6B");
+      cout << "you're in room 7. The laundry room where you can wash your dirty clothes and etc." << endl;
+      cout << "You can go(w)est or (s)outh" << endl;
+      getline(cin, direction);
+      if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+          if (direction == "w")
+            room = 6;
+      if (direction == "s")
+        room = 8;
+      break;
+
+
+    case 8:
+      system("color 0E");
+      cout << "you're in room 8. The dance room where you can be failure and not take the career path that your parents chose for you" << endl;
+      cout << "You can go(n)orth or (e)ast" << endl;
+      getline(cin, direction);
+      if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+      if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+          if (direction == "n")
+            room = 7;
+      if (inventory[0] == "Regular key") {
+        cout << "you pickup the Regluar key!" << endl;
+        inventory[0] = "Regluar key";
+
+      }
+      if (direction == "e")
+        room = 9;
+      break;
+
+    case 9:
+      system("color 4F");
+      cout << "you're in room 9. The chemisty room where you can make quote un-quote blue rock candy" << endl;
+      cout << "You can go (w)est or (s)outh" << endl;
+      getline(cin, direction);
+      if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+      if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+      if (direction == "w")
+            room = 8;
+
+      if (direction == "s")
+        room = 10;
+      break;
+
+    case 10:
+      system("color 4C");
+      cout << "you're in room 10. The basement where you can hide your weapons, potions or even your kids" << endl;
+      cout << "You can go (N)orth or (E)ast" << endl;
+      getline(cin, direction);
+      if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+          if (direction == "n")
+            room = 9;
+
+      if (direction == "e")
+        room = 11;
+      break;
+
+    case 11:
+      system("color 8A");
+      cout << "you're in room 11. The gaming room where you can play can Call of Duty while saying inappropriate words and playing other games." << endl;
+      cout << "You can go (w)est or (e)ast" << endl;
+      getline(cin, direction);
+      if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+          if (direction == "w")
+            room = 10;
+
+      if (direction == "e")
+        room = 12;
+      break;
+
+    case 12:
+      system("color 0D");
+      cout << "you're in room 12. The fighting room, where you can take out your anger all a dummy on why you're a failure to your family/dog." << endl;
+      cout << "You can go (w)est or (e)ast" << endl;
+      getline(cin, direction);
+      if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+          if (direction == "w")
+            room = 11;
+
+      if (direction == "e")
+        room = 13;
+      break;
+
+    case 13:
+      system("color 1E");
+      cout << "you're in room 13. The Ryan Reyolds shrine room." << endl;
+      cout << "You can go (w)est or (n)orth" << endl;
+      getline(cin, direction);
+      if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+          if (direction == "w")
+            room = 12;
+
+      if (direction == "n")
+        room = 14;
+      break;
+
+    case 14:
+      system("color E0");
+      cout << "you're in room 14. The second bathroom with a bidets." << endl;
+      cout << "You can go(s)outh or (n)orth" << endl;
+      getline(cin, direction);
+      if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+        if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+          if (direction == "s")
+            room = 13;
+
+      if (direction == "n")
+        room = 15;
+      break;
+
+    case 15:
+      system("color F0");
+      cout << "you're in room 15. The laser room if you touch a laser you die" << endl;
+      cout << "You can go (w)est or (s)outh" << endl;
+      getline(cin, direction);
+      //if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        //if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+      if (direction == "w")
+        room = 16;
+      if (direction == "s")
+        room = 14;
+
+      break;
+
+    case 16:
+      system("color 82");
+      cout << "you're in room 16. The movie room where you can watch all your fav movies." << endl;
+      cout << "You can go (n)orth or (e)ast" << endl;
+      getline(cin, direction);
+      //if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        //if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+      if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+        room = 17;
+
+      if (direction == "e")
+        room = 15;
+      break;
+
+    case 17:
+      system("color 09");
+      cout << "you're in room 17. The zoo where you can see tons of animals." << endl;
+      cout << "You can go(n)orth or (s)outh" << endl;
+      getline(cin, direction);
+      //if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        //if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+          if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+            room = 18;
+
+        if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+        room = 16;
+      break;
+
+    case 18:
+      system("color 7C");
+      cout << "you're in room 18. The library where you can study or hide from your parents." << endl;
+      cout << "You can go(w)est or (s)outh" << endl;
+      getline(cin, direction);
+      //if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+        //if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+        if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+            room = 19;
+      if (direction == "Metal key") {
+
+        cout << "you pickup the Metal key!" << endl;
+        inventory[4] = "Metal key";
+      }
+      if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+        room = 10;
+      break;
+
+    case 19:
+      system("color 0F");
+      cout << "you're in room 19. The photography room where you can work on photo take skills." << endl;
+      cout << "You can go(w)est or (e)ast" << endl;
+      getline(cin, direction);
+      //if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+      //if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+        if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+            room = 20;
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+        room = 18;
+      break;
+
+    case 20:
+      system("color F4");
+      cout << "you're in room 20. The crime lab, where you can get away with your crime by getting rid of the evidnece." << endl;
+      cout << "You can go(n)orth or (e)ast" << endl;
+      getline(cin, direction);
+      //if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+      //if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+          if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+            room = 21;
+
+      if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+        room = 19;
+      break;
+
+    case 21:
+      system("color 2B");
+      cout << "you're in room 21. The second room with a smaller bedroom and a bathroom/shower" << endl;
+      cout << "You can go(n)orth or (s)outh" << endl;
+      getline(cin, direction);
+      //if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+
+        //if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+        if (direction.compare("n") == 0 || direction.compare("north") == 0 || direction.compare("go north") == 0)
+            room = 22;
+
+        if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+          room = 20;
+      break;
+
+    case 22:
+      system("color 5F");
+      cout << "you're in room 22. The fallout room where nuclear items are stored." << endl;
+      cout << "You can go (e)ast or (s)outh" << endl;
+      getline(cin, direction);
+      //if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+      //if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+      if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+        room = 23;
+
+      if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+        room = 21;
+      break;
+
+    case 23:
+      system("color 1C");
+      cout << "you're in room 23. The anime room for down bad people like tam to cry in." << endl;
+      cout << "You can go(w)est or (e)ast" << endl;
+      getline(cin, direction);
+      //if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+      //if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+        if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+          room = 22;
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+          room = 24;
+      break;
+
+    case 24:
+      system("color D2");
+      cout << "you're in room 24. The happy room if you are sad, you will be sleeping forever." << endl;
+      cout << "You can go (w)est or (e)ast" << endl;
+      getline(cin, direction);
+      //if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+      //if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+
+        if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+          room = 23;
+
+        if (direction.compare("e") == 0 || direction.compare("east") == 0 || direction.compare("go east") == 0)
+          room = 25;
+      break;
+
+    case 25:
+      system("color 2E");
+      cout << "you're in room 25. The dog room with good boys and girls to help you before the end." << endl;
+      cout << "You can go (w)est or (s)outh" << endl;
+      getline(cin, direction);
+      //if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+
+      //if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+
+        if (direction.compare("w") == 0 || direction.compare("west") == 0 || direction.compare("go west") == 0)
+            room = 24;
+
+        if (direction.compare("s") == 0 || direction.compare("south") == 0 || direction.compare("go south") == 0)
+          if (inventory[0] == "Regular key" && inventory[4] == "Metal key")
+          cout << "Congrations you unlocked the final room" << endl;
+      room = 26;
+      break;
+
+    case 26:
+      cout << "The End" << endl;
+      PlaySound(TEXT("Big Chungus Boss Music.wav"), NULL, SND_FILENAME | SND_ASYNC);
+      system("color 0C");
+      BattleSystem();
+      hasWon = true;
+      cout << "you're in room 26. Welcome the Chungus you're about to meet your maker." << endl;
+
+      cout << "@         @@@@" << endl;
+      cout << "@@@@       @@@@@" << endl;
+      cout << "@@@@      @@@@@@" << endl;
+      cout << "@@ * +@@    @ %= @@@@" << endl;
+      cout << "@@++@@    @ % -- + @@" << endl;
+      cout << "@@++@@    @ % -- = @@" << endl;
+      cout << "@@@ + -- * @ @@@ % -- = @@" << endl;
+      cout << "@@ %= -- * @ @@ % #-- = @@" << endl;
+      cout << "@@ %= -- * @ @@ % #-- = @@" << endl;
+      cout << "@@ %= -- * @ @@ % #-- = @@" << endl;
+      cout << "@@ %= -- * @ @@ % #-- = @@" << endl;
+      cout << "@@ %= -- * @ @@ % #-- = @@" << endl;
+      cout << "@@ % %#  - *@ @@ % #-- = @@" << endl;
+      cout << "@@@ % #  - *@ @@ % # - % @@@" << endl;
+      cout << "@@ % #  - *@@@@ % # - % @@" << endl;
+      cout << "@@ % ## % @@@@ % ##@@@" << endl;
+      cout << "@@ % @@@@ % %%%@@@" << endl;
+      cout << "@@ % %%@@@ % %%@@@@" << endl;
+      cout << "@@ % %%@ % %%%%%%@@@" << endl;
+      cout << "@@ % %%%%%%%%%%@@@@" << endl;
+      cout << "@@@@ % %%%%@++ % %%@ * +@@" << endl;
+      cout << "@@@ % %%%%%@ - : % %%@ + :@@@@" << endl;
+      cout << "@@###  * +@@@ * ++++++ + @@@@" << endl;
+      cout << "@@#  * ++++++ % %++++#@ + #@@" << endl;
+      cout << "@@#  * ++ + @@@ % ##:.. - +@@@@" << endl;
+      cout << "@@ % #  * *++++++++++++ + #@@" << endl;
+      cout << "@@@@@ % #++++++++++++++ + #@@" << endl;
+      cout << "@@@ % %%%#++++++++++++++ + *%@@" << endl;
+      cout << "@@@@ % %%%%#++++++++++++++ + *%@@@@" << endl;
+      cout << "@@@@ % %%%%%++++++++++++++++ + *%%%@@@" << endl;
+      cout << "@@@@ % %%%%%%++++++++++++++++++ + #  % %@@" << endl;
+      cout << "@@@ % %%%%%%%%##++++++++++++++++++ + *#  % %%@@@" << endl;
+      cout << "@@@@@ % %%%%%%## * ++++++++++++++++++++ + *%%%@@@@@" << endl;
+      cout << "@@ % %%%%%%%%#++++++++++++++++++++++++++# % %%%@@" << endl;
+      cout << "@@@ % %%%%%%%%*++++++++++++++++++++++++++#  % %%%@@@" << endl;
+      cout << "@#.....: % %%++++++++++++++++++++++++++++##.... + @" << endl;
+      cout << "@#.....: % %%++++++++++++++++++++++++++ - .*#.... + @" << endl;
+      cout << "@%......... = ++++++++++++++++++++++++ + -....--. + @" << endl;
+      cout << "@ %= :: = :.++++++++++++++++++++++++++++++ + -: -.. : *@" << endl;
+      cout << "@@ %= -:-- : -++++++++++++++++++++++++++++ + -: . : = #  % @" << endl;
+      cout << "@@::#  = .++++++++++++++++++++++++++++++++ + @@@@@" << endl;
+      cout << "@@ % #  % ##++++++++++++++++++++++++++++++ + % @@@" << endl;
+      cout << "@@ % %%%#++++++++++++++++++++++++++++++ + @@" << endl;
+      cout << "@@ % %%%#++++++++++++++++++++++++++++ + #@@@" << endl;
+      cout << "@@@@ % %%%*++++++++++++++++++++++++ * #@@@@@" << endl;
+      cout << "@@@ % %%#  * ++++++++++++++++++++ * %%@@@@@@@@@" << endl;
+      cout << "@@@@ % %%#  * ++++++++++++++ + % @@@@ + #@@ % *@@@@" << endl;
+      cout << "@@@@@@@@@ % %%#++++++++ + #@@@@@@++++++ + #@@@@@" << endl;
+      cout << "@@@@@@ * +#  % %%%%%%%%%%@@@@@@#++++++++++++ + #@@@" << endl;
+      cout << "@#++ * @@@@ % # % %%%%%%%@@@   @@@@@@@@@@@@@@@@@@" << endl;
+      cout << "@ % *@ % ++++++ % %%%%%@@@@" << endl;
+      cout << "@@@@@ % %%%%%@@@@@@@@" << endl;
+      cout << "@@@@@@@@@@" << endl;
+
+      break;
+
+    }//end switch
+  }//end game loop
+}//end main
+
+//function delcarations
+
+void BattleSystem() {
+  int MonsterHealth = 20000;
+  int num;
+  cout << "------------------------------------------------------" << endl;
+  while (PlayerHealth > 0 && MonsterHealth > 0) { //keep looping until you or the monster dies
+    //monster attacks player
+    num = rand() % 100; //0-99dmg
+    PlayerHealth -= num;
+    cout << endl << endl << "The monster bites you for " << num << "damage." << endl;
+    //player attacks monster
+    num = rand() % 10 + 10; //10-19dmg
+    PlayerHealth -= num;
+    cout << "You hit the monster for " << num << "damage." << endl;
+    cout << "Your health is" << PlayerHealth << ", and the monster's is " << MonsterHealth << endl;
+  }//end of loop 
+  cout << "------------------------------------------------------" << endl;
+}
+
+void PetGen() {
+  //paste the code from tuesday here!
+  cout << "GRR I GOT THAT DOG IN ME" << endl;
+
+  int num = rand() % 100;
+  if (num < 20)
+    cout << "Demarcus hits you in the face" << endl;
+  else if (num < 10)
+    cout << "Demarcus licks rock intensely " << endl;
+  else if (num < 30)
+    cout << "Demarcus Raps better than Eminem" << endl;
+  else if (num < 100)
+    cout << "Demarcus uses politics to theaten you" << endl;
+}
+
+void itemDropper() {
+  int num = rand() % 100; //b/t 0-99
+  if (num < 25) {
+    cout << "you got a dirty Hat!" << endl;
+    inventory[1] = "Hat";
+  }
+  else if (num < 50) {
+    cout << "you got a handful of legos!" << endl;
+    inventory[2] = "legos";
+
+  }
+  else if (num < 60) {
+    cout << "you got a CHICKEN" << endl;
+    inventory[3] = "chicken";
+  }
+  else {
+    cout << "you didnt get anything" << endl;
+  }
+}
+
+//void MonsterGen()
+
+
+void Shop() {
+  int input = 23453245;
+  while (input != 0) {
+    cout << "welcome to the shop!" << endl;
+    cout << "You have " << dubloons << "dubloons" << endl;
+    cout << "items for sale:" << endl;
+    cout << "1) sword: 20" << endl;
+    cout << "2) potion: 10" << endl;
+    cout << "3) armor: 50" << endl;
+    cout << "press 0 to quit" << endl;
+    cin >> input;
+
+    if (input == 1) {
+      if (dubloons >= 20) {
+        cout << "you bought a sword!" << endl;
+        inventory[1] = "sword";
+        dubloons -= 20;
+      }
+      else {
+        cout << "sorry, you don't have enough dubloons" << endl;
+      }
+    }
+    if (input == 2) {
+      if (dubloons >= 10) {
+        cout << "you bought a potion!" << endl;
+        inventory[2] = "potion";
+        dubloons -= 10;
+      }
+      else
+        cout << "sorry, you don't have enough dubloons" << endl;
+    }
+    if (input == 3) {
+      cout << "you bought a armor!" << endl;
+      inventory[3] = "armor";
+      dubloons -= 50;
+    }
+    //if (dubloons >= 20) {
+      //cout << "you bought a sword!" << endl;
+      //inventory[1] = "sword";
+      //dubloons -= 20;
+      //cout << "sorry, you don't have enough dubloons" << endl;
+    //}
+    else {
+    }
+
+  }
+}// end of the shop function
